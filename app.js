@@ -10,10 +10,7 @@ var express = require('express')
   , stylus = require('stylus')
   , nib = require('nib');
 
-var app = module.exports = express.createServer();
-
 // stylus compiler
-
 function compile(str, path) {
   return stylus(str)
     .set('filename', path)
@@ -21,7 +18,6 @@ function compile(str, path) {
 }
 
 // normalize database on boot
-
 function normalize() {
   var month
     , ids;
@@ -44,8 +40,8 @@ function normalize() {
   app.locals({ config: db.config });
 }
 
+var app = module.exports = express.createServer();
 // configuration
-
 app.configure(function(){
   app.set('title', 'Financial Management');
   app.set('views', __dirname + '/views');
@@ -61,11 +57,11 @@ app.configure(function(){
 
 app.configure('development', function(){
   db = new Database('/tmp/finance.db');
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-app.configure('tj', function(){
-  app.set('title', "TJ's Financial Management");
+app.configure('siva', function(){
+  app.set('title', "Siva's Financial Management");
   app.enable('cache views');
   db = new Database('/Users/tj/dropbox/documents/finances-tj.db');
   app.use(express.errorHandler({ dumpExceptions: true }));
@@ -76,7 +72,6 @@ app.configure(function(){
 });
 
 // routing
-
 app.get('/', main.index);
 app.put('/config', main.updateConfig);
 var month = app.resource('month', require('./controllers/month'));
@@ -84,7 +79,6 @@ var items = app.resource('items', require('./controllers/item'));
 month.add(items);
 
 // listen
-
 app.listen(3000);
 console.log("Express server listening on port %d", app.address().port);
 console.log('  database: %s', db.path);
